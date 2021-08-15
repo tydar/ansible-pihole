@@ -1,2 +1,3 @@
 ---
 # defaults file for pihole-unbound
+git_clone_location: '/srv/pihole'
