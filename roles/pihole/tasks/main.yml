@@ -1,4 +1,11 @@
 ---
+- name: install prerequisite packages
+  ansible.builtin.apt:
+      name: git
+      state: present
+      update_cache: yes
+  become: yes
+
 - name: Git clone of pihole
   ansible.builtin.git:
       repo: 'https://github.com/pi-hole/pi-hole.git'
@@ -9,15 +16,19 @@
       path: /etc/pihole
       state: directory
       mode: '0755'
+  become: yes
 
 - name: copy templated setupVars.conf file to /etc/pihole/setupVars.conf
   ansible.builtin.template:
       src: setupVars.conf.j2
       dest: /etc/pihole/setupVars.conf
       mode: '0755'
+  become: yes
 
 - name: Run pihole installer
-  ansible.builtin.command: bash '{{ git_clone_location }}/pi-hole/automated install/basic-install.sh'
+  ansible.builtin.command: bash "{{ git_clone_location }}/automated install/basic-install.sh" --unattended
+  become: yes
 
 - name: Set pihole password
   ansible.builtin.command: pihole -a -p {{ pihole_password }}
+  become: yes

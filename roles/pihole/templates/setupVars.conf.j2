@@ -1,11 +1,12 @@
 PIHOLE_INTERFACE={{ pihole_interface }}
 IPV4_ADDRESS={{ pihole_ipv4  }}
+{% if pihole_ipv6 is defined %}
 IPV6_ADDRESS={{ pihole_ipv6 }}
+{% endif %}
 PIHOLE_DNS_1={{ pihole_dns_1 }}
 PIHOLE_DNS_2={{ pihole_dns_2 }}
 QUERY_LOGGING={{ pihole_query_logging }}
 INSTALL_WEB_SERVER={{ pihole_install_web_server }}
 INSTALL_WEB_INTERFACE={{ pihole_install_web_interface }}
 CACHE_SIZE=10000
-WEBPASSWORD=ed6b86b83c9e945bd10309638a2fe789f95b85b9a1886990a5b01837a6bc92e9
 BLOCKING_ENABLED={{ pihole_blocking_enabled }}

@@ -1,0 +1,7 @@
+---
+- name: configure a server to run a pihole
+  hosts: dns
+  remote_user: debian
+  vars_files: "{{ playbook_dir }}/local_vars/test_vars.yml"
+  roles:
+      - pihole

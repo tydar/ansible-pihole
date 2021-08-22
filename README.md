@@ -11,7 +11,19 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+pihole installation variables:
+
+* git_clone_location: local directory for pihole checkout
+* pihole_interface: what network interface pihole will use
+* pihole_ipv4: ipv4 address for the pihole server
+* pihole_ipv6: ipv6 address for the pihole server
+* pihole_dns_1 ... 4: up to 4 upstream DNS servers for the pihole to forward to
+* pihole_query_logging: enable or disable pihole logging of DNS queries
+* pihole_install_web_server: enable or disable pihole installing lighttpd & php
+* pihole_install_web_interface: enable or disable installation of web admin interface
+* pihole_blocking_enabled: enable or disable pihole blocking
+* pihole_password: password for the pihole web interface
+
 
 Dependencies
 ------------
