@@ -2,6 +2,8 @@ PIHOLE_INTERFACE={{ pihole_interface }}
 IPV4_ADDRESS={{ pihole_ipv4  }}
 {% if pihole_ipv6 is defined %}
 IPV6_ADDRESS={{ pihole_ipv6 }}
+{% else %}
+IPV6_ADDRESS=
 {% endif %}
 PIHOLE_DNS_1={{ pihole_dns_1 }}
 PIHOLE_DNS_2={{ pihole_dns_2 }}
