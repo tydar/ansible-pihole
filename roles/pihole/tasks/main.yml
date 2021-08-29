@@ -89,6 +89,24 @@
   when: pihole_version.rc == 0 and pihole_dns_4 is defined
   notify: Reconfigure pihole
 
+- name: Enable or disable blocking
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "BLOCKING_ENABLED={{ pihole_blocking_enabled | lower }}"
+      regexp: "^BLOCKING_ENABLED="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_blocking_enabled is defined
+  notify: Reconfigure pihole
+
+- name: Enable or disable query logging
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "QUERY_LOGGING={{ pihole_query_logging | lower }}"
+      regexp: "^QUERY_LOGGING="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_query_logging is defined
+  notify: Reconfigure pihole
+
 - name: Set pihole password
   ansible.builtin.command: pihole -a -p {{ pihole_password }}
   become: yes
