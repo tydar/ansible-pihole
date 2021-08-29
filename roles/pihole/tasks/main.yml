@@ -6,10 +6,17 @@
       update_cache: yes
   become: yes
 
+- name: check if pihole is installed
+  ansible.builtin.command: pihole
+  register: pihole_version
+  ignore_errors: yes
+
 - name: Git clone of pihole
   ansible.builtin.git:
       repo: 'https://github.com/pi-hole/pi-hole.git'
       dest: '{{ git_clone_location }}'
+      depth: 1
+  when: pihole_version.rc != 0
 
 - name: create /etc/pihole folder
   ansible.builtin.file:
@@ -17,6 +24,7 @@
       state: directory
       mode: '0755'
   become: yes
+  when: pihole_version.rc != 0
 
 - name: copy templated setupVars.conf file to /etc/pihole/setupVars.conf
   ansible.builtin.template:
@@ -24,10 +32,13 @@
       dest: /etc/pihole/setupVars.conf
       mode: '0755'
   become: yes
+  when: pihole_version.rc != 0
+
 
 - name: Run pihole installer
-  ansible.builtin.command: bash "{{ git_clone_location }}/automated install/basic-install.sh" --unattended
+  ansible.builtin.shell: bash "{{ git_clone_location }}/automated install/basic-install.sh" --unattended
   become: yes
+  when: pihole_version.rc != 0
 
 - name: Set pihole password
   ansible.builtin.command: pihole -a -p {{ pihole_password }}
