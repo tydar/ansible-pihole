@@ -5,8 +5,18 @@ IPV6_ADDRESS={{ pihole_ipv6 }}
 {% else %}
 IPV6_ADDRESS=
 {% endif %}
+{% if pihole_dns_1 is defined %}
 PIHOLE_DNS_1={{ pihole_dns_1 }}
+{% endif %}
+{% if pihole_dns_2 is defined %}
 PIHOLE_DNS_2={{ pihole_dns_2 }}
+{% endif %}
+{% if pihole_dns_3 is defined %}
+PIHOLE_DNS_3={{ pihole_dns_3 }}
+{% endif %}
+{% if pihole_dns_4 is defined %}
+PIHOLE_DNS_4={{ pihole_dns_4 }}
+{% endif %}
 QUERY_LOGGING={{ pihole_query_logging | bool | lower }}
 INSTALL_WEB_SERVER={{ pihole_install_web_server | bool | lower }}
 INSTALL_WEB_INTERFACE={{ pihole_install_web_interface | bool | lower }}
