@@ -6,10 +6,15 @@
       update_cache: yes
   become: yes
 
+### Attempt to run the pihole command. We expect a failure if pihole is not installed, so set ignore_errors
+### We will use the return value of the pihole command to determine which tasks need to be ran for idempotence
+
 - name: check if pihole is installed
   ansible.builtin.command: pihole
   register: pihole_version
   ignore_errors: yes
+
+### If pihole is not installed, we clone the pihole repo and run the installation
 
 - name: Git clone of pihole
   ansible.builtin.git:
@@ -34,11 +39,55 @@
   become: yes
   when: pihole_version.rc != 0
 
-
 - name: Run pihole installer
   ansible.builtin.shell: bash "{{ git_clone_location }}/automated install/basic-install.sh" --unattended
   become: yes
   when: pihole_version.rc != 0
+
+### If the pihole is already installed, we check the value of certain setupVars.conf lines against our provided vars
+### If changes are detected, we notify a handler that will perform an unattended reconfiguration of the pihole instance
+
+### I belive this has to be done with lineinfile instead of template because the setupVars.conf of a successfully installed
+### pihole that includes the web interface will always differ from our template due to having the password hash stored.
+### That would lead to unnecessary invocations of the Reconfigure pihole handler.
+
+### We also need to check that each DNS variable is defined before running the task, since each is optional
+
+- name: Update PIHOLE_DNS_1 setting 
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "PIHOLE_DNS_1={{ pihole_dns_1 }}"
+      regexp: "^PIHOLE_DNS_1="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_dns_1 is defined
+  notify: Reconfigure pihole
+
+- name: Update PIHOLE_DNS_2 setting 
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "PIHOLE_DNS_2={{ pihole_dns_2 }}"
+      regexp: "^PIHOLE_DNS_2="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_dns_2 is defined
+  notify: Reconfigure pihole
+
+- name: Update PIHOLE_DNS_3 setting 
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "PIHOLE_DNS_3={{ pihole_dns_3 }}"
+      regexp: "^PIHOLE_DNS_3="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_dns_3 is defined
+  notify: Reconfigure pihole
+
+- name: Update PIHOLE_DNS_4 setting 
+  ansible.builtin.lineinfile:
+      path: /etc/pihole/setupVars.conf
+      line: "PIHOLE_DNS_4={{ pihole_dns_4 }}"
+      regexp: "^PIHOLE_DNS_4="
+  become: yes
+  when: pihole_version.rc == 0 and pihole_dns_4 is defined
+  notify: Reconfigure pihole
 
 - name: Set pihole password
   ansible.builtin.command: pihole -a -p {{ pihole_password }}

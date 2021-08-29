@@ -1,2 +1,6 @@
 ---
 # handlers file for pihole-unbound
+
+- name: Reconfigure pihole
+  ansible.builtin.shell: bash "{{ git_clone_location }}/automated install/basic-install.sh" --unattended --reconfigure
+  become: yes
